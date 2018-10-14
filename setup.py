@@ -16,12 +16,12 @@ try:
 except ImportError:
     pass
 else:
+
     class UniversalBdistWheel(bdist_wheel):
-
         def get_tag(self):
-            return ('py2.py3', 'none',) + bdist_wheel.get_tag(self)[2:]
+            return ("py2.py3", "none") + bdist_wheel.get_tag(self)[2:]
 
-    cmdclass['bdist_wheel'] = UniversalBdistWheel
+    cmdclass["bdist_wheel"] = UniversalBdistWheel
 
 
 class Executable(Extension):
@@ -40,11 +40,10 @@ class Executable(Extension):
 
 
 class ExecutableBuildExt(build_ext):
-
     def get_ext_filename(self, ext_name):
         for ext in self.extensions:
             if isinstance(ext, Executable):
-                return os.path.join(*ext_name.split('.')) + ext.suffix
+                return os.path.join(*ext_name.split(".")) + ext.suffix
         return build_ext.get_ext_filename(self, ext_name)
 
     def build_extension(self, ext):
@@ -55,9 +54,7 @@ class ExecutableBuildExt(build_ext):
         log.info("running '%s'" % " ".join(ext.cmd))
         if not self.dry_run:
             target = ext.name.split(".")[-1]
-            rv = subprocess.Popen(ext.cmd + [target],
-                                  cwd=ext.cwd,
-                                  env=ext.env).wait()
+            rv = subprocess.Popen(ext.cmd + [target], cwd=ext.cwd, env=ext.env).wait()
             if rv != 0:
                 sys.exit(rv)
 
@@ -65,23 +62,19 @@ class ExecutableBuildExt(build_ext):
         exe_fullpath = os.path.join(ext.output_dir, exe_name)
 
         dest_path = self.get_ext_fullpath(ext.name)
-        mkpath(os.path.dirname(dest_path),
-               verbose=self.verbose, dry_run=self.dry_run)
+        mkpath(os.path.dirname(dest_path), verbose=self.verbose, dry_run=self.dry_run)
 
-        copy_file(exe_fullpath, dest_path,
-                  verbose=self.verbose, dry_run=self.dry_run)
+        copy_file(exe_fullpath, dest_path, verbose=self.verbose, dry_run=self.dry_run)
 
 
-cmdclass['build_ext'] = ExecutableBuildExt
+cmdclass["build_ext"] = ExecutableBuildExt
 
 if os.name == "nt":
     cmd = ["build.bat"]
 else:
     cmd = ["bash", "build.sh"]
 
-ots_sanitize = Executable("ots.ots-sanitize",
-                          cmd=cmd,
-                          output_dir="build/meson")
+ots_sanitize = Executable("ots.ots-sanitize", cmd=cmd, output_dir="build/meson")
 
 with open("README.md", "r", encoding="utf-8") as readme:
     long_description = readme.read()
@@ -101,12 +94,9 @@ setup(
     ext_modules=[ots_sanitize],
     zip_safe=False,
     cmdclass=cmdclass,
-    setup_requires=['setuptools_scm'],
-    entry_points={
-        "console_scripts": [
-            "ots-sanitize = ots:sanitize",
-        ],
-    },
+    setup_requires=["setuptools_scm"],
+    extras_require={"testing": ["pytest"]},
+    entry_points={"console_scripts": ["ots-sanitize = ots:sanitize"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
