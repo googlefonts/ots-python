@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# executable built in-place
+src/python/ots/ots-sanitize
