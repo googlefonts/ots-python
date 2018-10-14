@@ -6,3 +6,4 @@ requires = [
     "meson",
     "ninja",
 ]
+build-backend = "setuptools.build_meta"
