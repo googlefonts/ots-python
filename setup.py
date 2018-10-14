@@ -80,13 +80,13 @@ with open("README.md", "r", encoding="utf-8") as readme:
     long_description = readme.read()
 
 setup(
-    name="ots-py",
+    name="opentype-sanitizer",
     use_scm_version=True,
     description=("Python wrapper for the OpenType Sanitizer"),
     long_description=long_description,
     author="Cosimo Lupo",
     author_email="cosimo@anthrotype.com",
-    url="https://github.com/anthrotype/ots-py",
+    url="https://github.com/anthrotype/ots-python",
     license="MIT",
     platforms=["posix", "nt"],
     package_dir={"": "src/python"},
