@@ -1,2 +1,2 @@
-# ots-wheels
-Python wheels for the OpenType Sanitizer
+# ots-python
+Python wheels for the [OpenType Sanitizer](https://github.com/khaledhosny/ots)
