@@ -7,7 +7,12 @@ from distutils import log
 import os
 import sys
 import subprocess
-from io import open
+
+if sys.version_info[:2] < (3, 6):
+    sys.exit(
+        "error: Python 3.6 is required to run setup.py. \n"
+        "The generated wheel will be compatible with both py27 and py3+"
+    )
 
 
 cmdclass = {}
@@ -31,12 +36,13 @@ class Executable(Extension):
     else:
         suffix = ""
 
-    def __init__(self, name, cmd, cwd=".", output_dir=".", env=None):
+    def __init__(self, name, script, output_dir=".", cwd=None, env=None):
         Extension.__init__(self, name, sources=[])
-        self.cmd = cmd
-        self.cwd = os.path.normpath(cwd)
-        self.output_dir = os.path.normpath(output_dir)
-        self.env = env or dict(os.environ)
+        self.target = self.name.split(".")[-1]
+        self.script = script
+        self.output_dir = output_dir
+        self.cwd = cwd
+        self.env = env
 
 
 class ExecutableBuildExt(build_ext):
@@ -51,14 +57,20 @@ class ExecutableBuildExt(build_ext):
             build_ext.build_extension(self, ext)
             return
 
-        log.info("running '%s'" % " ".join(ext.cmd))
+        cmd = [sys.executable, ext.script, ext.target]
+        if self.force:
+            cmd += ["--force"]
+        log.debug("running '{}'".format(" ".join(cmd)))
         if not self.dry_run:
-            target = ext.name.split(".")[-1]
-            rv = subprocess.Popen(ext.cmd + [target], cwd=ext.cwd, env=ext.env).wait()
-            if rv != 0:
-                sys.exit(rv)
+            p = subprocess.run(cmd, cwd=ext.cwd, env=ext.env)
+            if p.returncode != 0:
+                from distutils.errors import DistutilsExecError
 
-        exe_name = target + ext.suffix
+                raise DistutilsExecError(
+                    "running '{}' script failed".format(ext.script)
+                )
+
+        exe_name = ext.target + ext.suffix
         exe_fullpath = os.path.join(ext.output_dir, exe_name)
 
         dest_path = self.get_ext_fullpath(ext.name)
@@ -69,12 +81,9 @@ class ExecutableBuildExt(build_ext):
 
 cmdclass["build_ext"] = ExecutableBuildExt
 
-if os.name == "nt":
-    cmd = ["build.bat"]
-else:
-    cmd = ["bash", "build.sh"]
-
-ots_sanitize = Executable("ots.ots-sanitize", cmd=cmd, output_dir="build/meson")
+ots_sanitize = Executable(
+    "ots.ots-sanitize", script="build.py", output_dir=os.path.join("build", "meson")
+)
 
 with open("README.md", "r", encoding="utf-8") as readme:
     long_description = readme.read()
