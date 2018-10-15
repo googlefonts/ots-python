@@ -180,7 +180,8 @@ class ExecutableBuildExt(build_ext):
         copy_file(exe_fullpath, dest_path, verbose=self.verbose, dry_run=self.dry_run)
 
 
-cmdclass = {"download": Download, "build_ext": ExecutableBuildExt}
+cmdclass["download"] = Download
+cmdclass["build_ext"] = ExecutableBuildExt
 
 ots_sanitize = Executable(
     "ots.ots-sanitize", script="build.py", output_dir=os.path.join("build", "meson")
