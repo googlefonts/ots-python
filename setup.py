@@ -191,7 +191,7 @@ with open("README.md", "r", encoding="utf-8") as readme:
 
 setup(
     name="opentype-sanitizer",
-    use_scm_version=True,
+    use_scm_version={"write_to": "src/python/ots/_version.py"},
     description=("Python wrapper for the OpenType Sanitizer"),
     long_description=long_description,
     author="Cosimo Lupo",
@@ -206,7 +206,6 @@ setup(
     cmdclass=cmdclass,
     setup_requires=["setuptools_scm"],
     extras_require={"testing": ["pytest"]},
-    entry_points={"console_scripts": ["ots-sanitize = ots:sanitize"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
