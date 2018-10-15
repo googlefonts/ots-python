@@ -105,3 +105,6 @@ venv.bak/
 
 # executable built in-place
 src/python/ots/ots-sanitize
+
+# uncompressed source tarball
+src/c/ots
