@@ -19,7 +19,7 @@ script: tox
 after_success:
   # If it's a tagged commit, upload sdist and wheel packages to PyPI.
   - |
-    if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_REPO_SLUG" == "anthrotype/ots-py" ]; then
+    if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_REPO_SLUG" == "anthrotype/ots-python" ]; then
         pip install --upgrade pip setuptools wheel twine
         pip wheel -w dist -v --no-deps .
         twine upload dist/*.whl
