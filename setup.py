@@ -187,7 +187,7 @@ class ExecutableBuildExt(build_ext):
             env = self._compiler_env.copy()
             if ext.env:
                 env.update(ext.env)
-            p = subprocess.run(cmd, cwd=ext.cwd, env=env, shell=True)
+            p = subprocess.run(cmd, cwd=ext.cwd, env=env)
             if p.returncode != 0:
                 from distutils.errors import DistutilsExecError
 
