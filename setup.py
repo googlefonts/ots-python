@@ -135,7 +135,7 @@ class Executable(Extension):
 
     def __init__(self, name, script, output_dir=".", cwd=None, env=None):
         Extension.__init__(self, name, sources=[])
-        self.target = self.name.split(".")[-1]
+        self.target = self.name.split(".")[-1] + self.suffix
         self.script = script
         self.output_dir = output_dir
         self.cwd = cwd
@@ -171,8 +171,7 @@ class ExecutableBuildExt(build_ext):
                     "running '{}' script failed".format(ext.script)
                 )
 
-        exe_name = ext.target + ext.suffix
-        exe_fullpath = os.path.join(ext.output_dir, exe_name)
+        exe_fullpath = os.path.join(ext.output_dir, ext.target)
 
         dest_path = self.get_ext_fullpath(ext.name)
         mkpath(os.path.dirname(dest_path), verbose=self.verbose, dry_run=self.dry_run)
