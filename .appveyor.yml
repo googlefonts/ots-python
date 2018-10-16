@@ -45,7 +45,7 @@ install:
   - tox --sdistonly
   - tox -e wheel
   # get the full path to the compiled wheel (ugly but works)
-  - dir /s /b .tox\dist\*.whl > wheel.pth
+  - dir /s /b dist\*.whl > wheel.pth
   - set /p WHEEL_PATH=<wheel.pth
 
 build: false
@@ -80,4 +80,4 @@ on_success:
 
 artifacts:
   # archive the generated packages in the ci.appveyor.com build report
-  - path: .tox\dist\*
+  - path: dist\*
