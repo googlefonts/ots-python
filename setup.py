@@ -1,7 +1,7 @@
 from __future__ import print_function, absolute_import
 from setuptools import setup, find_packages, Extension, Command
 from setuptools.command.build_ext import build_ext
-from setuptools.command.sdist import sdist
+from setuptools.command.egg_info import egg_info
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath, remove_tree
 from distutils import log
@@ -204,14 +204,17 @@ class ExecutableBuildExt(build_ext):
         copy_file(exe_fullpath, dest_path, verbose=self.verbose, dry_run=self.dry_run)
 
 
-class BundledSdist(sdist):
-    # ensure 'download' is run before 'sdist' so the package includes ots source
-    sub_commands = [("download", lambda self: True)] + sdist.sub_commands
+class CustomEggInfo(egg_info):
+
+    def run(self):
+        # make sure the ots source is downloaded before creating sdist manifest
+        self.run_command("download")
+        egg_info.run(self)
 
 
 cmdclass["download"] = Download
 cmdclass["build_ext"] = ExecutableBuildExt
-cmdclass["sdist"] = BundledSdist
+cmdclass["egg_info"] = CustomEggInfo
 
 ots_sanitize = Executable(
     "ots.ots-sanitize", script="build.py", output_dir=os.path.join("build", "meson")
