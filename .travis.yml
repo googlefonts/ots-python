@@ -28,6 +28,7 @@ matrix:
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.7
+        - BUILD_SDIST=true
     - os: osx
       language: generic
       env:
@@ -50,7 +51,11 @@ after_success:
   # If it's a tagged commit, upload sdist and wheel packages to PyPI.
   - |
     if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_REPO_SLUG" == "googlefonts/ots-python" ]; then
-        pip install --upgrade pip setuptools wheel twine
-        pip wheel -w dist -v --no-deps .
-        twine upload dist/*.whl
+        pip install --upgrade twine
+        twine upload wheelhouse/opentype_sanitizer*.whl
+        if [ "$BUILD_SDIST" == true ]; then
+            pip install --upgrade setuptools setuptools_scm
+            python setup.py sdist
+            twine upload dist/*.tar.gz
+        fi
     fi
