@@ -25,7 +25,7 @@ TOOLS = {
 
 MESON_CMD = [
     TOOLS["meson"],
-    "--unity=on",
+    "--backend=ninja",
     "--buildtype=release",
     "--strip",
     "-Ddebug=true",
