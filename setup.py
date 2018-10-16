@@ -1,6 +1,7 @@
 from __future__ import print_function, absolute_import
 from setuptools import setup, find_packages, Extension, Command
 from setuptools.command.build_ext import build_ext
+from setuptools.command.sdist import sdist
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath, remove_tree
 from distutils import log
@@ -170,7 +171,7 @@ class ExecutableBuildExt(build_ext):
         import struct
         from distutils._msvccompiler import _get_vc_env
 
-        arch = "x64" if struct.calcsize('P') * 8 == 64 else "x86"
+        arch = "x64" if struct.calcsize("P") * 8 == 64 else "x86"
         vc_env = _get_vc_env(arch)
         self._compiler_env.update(vc_env)
 
@@ -203,8 +204,14 @@ class ExecutableBuildExt(build_ext):
         copy_file(exe_fullpath, dest_path, verbose=self.verbose, dry_run=self.dry_run)
 
 
+class BundledSdist(sdist):
+    # ensure 'download' is run before 'sdist' so the package includes ots source
+    sub_commands = [("download", lambda self: True)] + sdist.sub_commands
+
+
 cmdclass["download"] = Download
 cmdclass["build_ext"] = ExecutableBuildExt
+cmdclass["sdist"] = BundledSdist
 
 ots_sanitize = Executable(
     "ots.ots-sanitize", script="build.py", output_dir=os.path.join("build", "meson")
