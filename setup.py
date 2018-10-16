@@ -143,6 +143,15 @@ class Executable(Extension):
 
 
 class ExecutableBuildExt(build_ext):
+    def finalize_options(self):
+        from distutils.ccompiler import get_default_compiler
+
+        build_ext.finalize_options(self)
+
+        if self.compiler is None:
+            self.compiler = get_default_compiler(os.name)
+        self._compiler_env = dict(os.environ)
+
     def get_ext_filename(self, ext_name):
         for ext in self.extensions:
             if isinstance(ext, Executable):
@@ -151,7 +160,19 @@ class ExecutableBuildExt(build_ext):
 
     def run(self):
         self.run_command("download")
+
+        if self.compiler == "msvc":
+            self.call_vcvarsall_bat()
+
         build_ext.run(self)
+
+    def call_vcvarsall_bat(self):
+        import struct
+        from distutils._msvccompiler import _get_vc_env
+
+        arch = "x64" if struct.calcsize('P') * 8 == 64 else "x86"
+        vc_env = _get_vc_env(arch)
+        self._compiler_env.update(vc_env)
 
     def build_extension(self, ext):
         if not isinstance(ext, Executable):
@@ -163,7 +184,10 @@ class ExecutableBuildExt(build_ext):
             cmd += ["--force"]
         log.debug("running '{}'".format(" ".join(cmd)))
         if not self.dry_run:
-            p = subprocess.run(cmd, cwd=ext.cwd, env=ext.env)
+            env = self._compiler_env.copy()
+            if ext.env:
+                env.update(ext.env)
+            p = subprocess.run(cmd, cwd=ext.cwd, env=env, shell=True)
             if p.returncode != 0:
                 from distutils.errors import DistutilsExecError
 

@@ -50,16 +50,16 @@ def check_tools():
 
 def configure(reconfigure=False):
     if not (BUILD_DIR / "build.ninja").exists():
-        subprocess.run(MESON_CMD, check=True)
+        subprocess.run(MESON_CMD, check=True, env=os.environ)
     elif reconfigure:
-        subprocess.run(MESON_CMD + ["--reconfigure"], check=True)
+        subprocess.run(MESON_CMD + ["--reconfigure"], check=True, env=os.environ)
 
 
 def make(*targets, clean=False):
     targets = list(targets)
     if clean:
-        subprocess.run(NINJA_CMD + ["-t", "clean"] + targets, check=True)
-    subprocess.run(NINJA_CMD + targets, check=True)
+        subprocess.run(NINJA_CMD + ["-t", "clean"] + targets, check=True, env=os.environ)
+    subprocess.run(NINJA_CMD + targets, check=True, env=os.environ)
 
 
 def main(args=None):
