@@ -51,8 +51,13 @@ test_script:
 
 on_failure:
   # print the content of tox *.log files
-  - ps: Get-Content .tox\\log\\*.log
-  - ps: $envlogdir = ".tox\\" + ${env:TOXENV} + "\\log"; `
+  - ps: $logdir = ".tox\\log"; `
+        if(Test-Path -Path $logdir){ `
+            foreach($logfile in Get-ChildItem $logdir){ `
+                $logpath = $logdir + "\\" + $logfile; `
+                Get-Content -path $logpath } `
+        } `
+        $envlogdir = ".tox\\" + ${env:TOXENV} + "\\log"; `
         foreach($logfile in Get-ChildItem $envlogdir){ `
             $logpath = $envlogdir + "\\" + $logfile; `
             Get-Content -path $logpath }
