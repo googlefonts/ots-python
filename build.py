@@ -29,11 +29,11 @@ MESON_CMD = [
     "--buildtype=release",
     "--strip",
     "-Ddebug=true",
-    BUILD_DIR,
-    SRC_DIR,
+    str(BUILD_DIR),
+    str(SRC_DIR),
 ]
 
-NINJA_CMD = [TOOLS["ninja"], "-C", BUILD_DIR]
+NINJA_CMD = [TOOLS["ninja"], "-C", str(BUILD_DIR)]
 
 
 class ExecutableNotFound(FileNotFoundError):
