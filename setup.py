@@ -225,6 +225,7 @@ setup(
     use_scm_version={"write_to": "src/python/ots/_version.py"},
     description=("Python wrapper for the OpenType Sanitizer"),
     long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Cosimo Lupo",
     author_email="cosimo@anthrotype.com",
     url="https://github.com/anthrotype/ots-python",
