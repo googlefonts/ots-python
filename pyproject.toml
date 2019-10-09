@@ -3,8 +3,7 @@ requires = [
     "setuptools",
     "wheel",
     "setuptools_scm",
-    # TODO: remove pinning 'meson<0.50' once mesonbuild/meson#5070 gets fixed
-    "meson >= 0.48, < 0.50",
+    "meson >= 0.48",
     "ninja",
 ]
 build-backend = "setuptools.build_meta"
