@@ -1,9 +1,5 @@
-dist: trusty
-sudo: required
-language: python
-# The travis Python version is unrelated to the version we build and test
-# with.  This is set with the MB_PYTHON_VERSION variable.
-python: 3.6
+dist: xenial
+language: generic
 services: docker
 
 env:
@@ -21,9 +17,6 @@ env:
 
 matrix:
   fast_finish: true
-  exclude:
-    # Exclude the default Python 3.6 build
-    - python: 3.6
   include:
     - os: linux
       env:
