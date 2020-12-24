@@ -5,9 +5,9 @@ platform:
 
 environment:
   TOXENV: "py"
-  TWINE_USERNAME: "anthrotype"
+  TWINE_USERNAME: "__token__"
   TWINE_PASSWORD:
-    secure: 9zLozI+1vEqeYX/OmuDcow==
+    secure: 1BEhEQciY0EJEm6X0asVaTuxxHXvFGctLK/nD+/saicnsHowEOH6zO1r/iNX47tS7yy3xmkGOzk7Y5KEIefkuCbYmDr+bhea8LH+5riu0L0DfSsgfp+hPbN9Nwhe8asyHyKBo/sxOHgiicb3dPXUeuKgcL8ngJBOrPtHDdsPcDfNFOEgtr+IE1evdUw3h0vcHJ0nnVT6n/k9KErkhejWW+R0xzP2FceLY5ucg5dyChPJ0Gce8itH2UgmufLGQWS2i0gnjl9myJRGSTfUOR3KM/X3AEl0N6DP1sgq9NJPGt0=
   matrix:
     - PYTHON: "C:\\Python37-x64"
       PYTHON_VERSION: "3.7"
