@@ -42,6 +42,7 @@ script:
 after_success:
   # If it's a tagged commit, upload sdist and wheel packages to PyPI.
   - |
+    pyenv global 3.6.7
     if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_REPO_SLUG" == "googlefonts/ots-python" ]; then
         pip3 install --upgrade twine
         twine upload wheelhouse/opentype_sanitizer*.whl
