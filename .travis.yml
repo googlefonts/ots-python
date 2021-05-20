@@ -44,6 +44,7 @@ after_success:
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         pyenv global 3.6.7
+        python3 -m pip install --upgrade pip
     fi
     if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_REPO_SLUG" == "googlefonts/ots-python" ]; then
         pip3 install --upgrade twine
