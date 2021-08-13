@@ -48,6 +48,8 @@ if PLATFORM.system == "Windows":
     MESON_OPTIONS.append("--force-fallback-for=zlib")
 
 if PLATFORM.system == "Darwin":
+    MESON_OPTIONS.append("--force-fallback-for=google-brotli,lz4")
+
     native_machine = MacTarget(PLATFORM.machine)
     cross_machine = (
         MacTarget.ARM64 if native_machine == MacTarget.X86_64 else MacTarget.X86_64
