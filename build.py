@@ -23,15 +23,16 @@ TOOLS = {
     "ninja": os.environ.get("NINJA_EXE", "ninja"),
 }
 
-MESON_CMD = [
-    TOOLS["meson"],
+MESON_OPTIONS = [
     "--backend=ninja",
     "--buildtype=release",
     "--strip",
     "-Ddebug=true",
-    str(BUILD_DIR),
-    str(SRC_DIR),
 ]
+if sys.platform == "win32":
+    MESON_OPTIONS.append("--force-fallback-for=zlib")
+
+MESON_CMD = [TOOLS["meson"]] + MESON_OPTIONS + [str(BUILD_DIR), str(SRC_DIR)]
 
 NINJA_CMD = [TOOLS["ninja"], "-C", str(BUILD_DIR)]
 
@@ -58,7 +59,9 @@ def configure(reconfigure=False):
 def make(*targets, clean=False):
     targets = list(targets)
     if clean:
-        subprocess.run(NINJA_CMD + ["-t", "clean"] + targets, check=True, env=os.environ)
+        subprocess.run(
+            NINJA_CMD + ["-t", "clean"] + targets, check=True, env=os.environ
+        )
     subprocess.run(NINJA_CMD + targets, check=True, env=os.environ)
 
 
