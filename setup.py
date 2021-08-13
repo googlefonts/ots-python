@@ -219,13 +219,11 @@ cmdclass["egg_info"] = CustomEggInfo
 
 build_options = []
 platform_tags = get_platform().split("-")
-print(platform_tags)
 if "macosx" in platform_tags:
     if "universal2" in platform_tags:
         build_options.append("--mac-target=universal2")
     elif "arm64" in platform_tags:
         build_options.append("--mac-target=arm64")
-print(build_options)
 
 ots_sanitize = Executable(
     "ots.ots-sanitize",
