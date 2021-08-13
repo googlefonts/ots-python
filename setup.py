@@ -4,6 +4,7 @@ from setuptools.command.build_ext import build_ext
 from setuptools.command.egg_info import egg_info
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath, remove_tree
+from distutils.util import get_platform
 from distutils import log
 import os
 import sys
@@ -134,10 +135,11 @@ class Executable(Extension):
     else:
         suffix = ""
 
-    def __init__(self, name, script, output_dir=".", cwd=None, env=None):
+    def __init__(self, name, script, options=None, output_dir=".", cwd=None, env=None):
         Extension.__init__(self, name, sources=[])
         self.target = self.name.split(".")[-1] + self.suffix
         self.script = script
+        self.options = options or []
         self.output_dir = output_dir
         self.cwd = cwd
         self.env = env
@@ -180,7 +182,7 @@ class ExecutableBuildExt(build_ext):
             build_ext.build_extension(self, ext)
             return
 
-        cmd = [sys.executable, ext.script, ext.target]
+        cmd = [sys.executable, ext.script] + ext.options + [ext.target]
         if self.force:
             cmd += ["--force"]
         log.debug("running '{}'".format(" ".join(cmd)))
@@ -205,7 +207,6 @@ class ExecutableBuildExt(build_ext):
 
 
 class CustomEggInfo(egg_info):
-
     def run(self):
         # make sure the ots source is downloaded before creating sdist manifest
         self.run_command("download")
@@ -216,8 +217,19 @@ cmdclass["download"] = Download
 cmdclass["build_ext"] = ExecutableBuildExt
 cmdclass["egg_info"] = CustomEggInfo
 
+build_options = []
+platform_tags = get_platform().split("-")
+if "macosx" in platform_tags:
+    if "universal2" in platform_tags:
+        build_options.append("--mac-target=universal2")
+    elif "arm64" in platform_tags:
+        build_options.append("--mac-target=arm64")
+
 ots_sanitize = Executable(
-    "ots.ots-sanitize", script="build.py", output_dir=os.path.join("build", "meson")
+    "ots.ots-sanitize",
+    script="build.py",
+    options=build_options,
+    output_dir=os.path.join("build", "meson"),
 )
 
 with open("README.md", "r", encoding="utf-8") as readme:
