@@ -44,7 +44,7 @@ MESON_OPTIONS = [
     "--strip",
     "-Ddebug=true",
 ]
-if PLATFORM.system == "win32":
+if PLATFORM.system == "Windows":
     MESON_OPTIONS.append("--force-fallback-for=zlib")
 
 if PLATFORM.system == "Darwin":
