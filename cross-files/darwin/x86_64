@@ -1,0 +1,20 @@
+[host_machine]
+system = 'darwin'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[constants]
+common_flags = ['--target=x86_64-apple-macos10.9']
+
+[built-in options]
+c_args = common_flags
+c_link_args = common_flags
+cpp_args = common_flags
+cpp_link_args = common_flags
+
+[binaries]
+c = 'cc'
+cpp = 'c++'
+ar = 'ar'
+strip = 'strip'
