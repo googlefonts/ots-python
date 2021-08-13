@@ -44,6 +44,8 @@ jobs:
       # ctypes-based 'universal binary wheel' (py3-none-*) not
       # linked to a specific python version or implementation.
       CIBW_BUILD: "cp39-*"
+      # Increase pip debugging output
+      CIBW_BUILD_VERBOSITY: 1
     steps:
       - uses: actions/checkout@v2
         with:
