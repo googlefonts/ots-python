@@ -243,7 +243,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Cosimo Lupo",
     author_email="cosimo@anthrotype.com",
-    url="https://github.com/anthrotype/ots-python",
+    url="https://github.com/googlefonts/ots-python",
     license="OpenSource, BSD-style",
     platforms=["posix", "nt"],
     package_dir={"": "src/python"},
